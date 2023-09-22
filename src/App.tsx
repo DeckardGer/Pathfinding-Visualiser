@@ -11,7 +11,7 @@ function App() {
     <div className="h-screen">
       <div className="flex flex-col items-center h-full">
         <header className="text-3xl my-2">Pathfinding Visualiser</header>
-        {/* <Grid gridSize={10} /> */}
+        <Grid gridSize={10} />
         <MainUtils />
       </div>
     </div>
