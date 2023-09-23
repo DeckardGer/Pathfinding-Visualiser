@@ -11,7 +11,11 @@ import {
 
 function MainUtils() {
   return (
-    <div className="w-96 h-14 mb-10 mt-4 flex justify-evenly items-center bg-slate-400 rounded-full">
+    <div className="w-screen h-14 max-w-sm mb-10 mt-4 flex justify-evenly items-center bg-card rounded-full">
+      {/* <div className="flex justify-center items-center w-full max-w-md mb-10 mt-4 bg-slate-400 rounded-full px-2">
+        <div className="w-full max-w-md h-24 bg-white"></div>
+      </div> */}
+      {/* <div className="w-screen h-1 max-w-sm mb-10 mt-4 flex justify-evenly items-center bg-slate-400 rounded-full"></div> */}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

@@ -33,6 +33,12 @@
     --ring: 212.7 26.8% 83.9%;
 
     --radius: 0.5rem;
+
+    /* TILE COLOURS */
+    --tile-empty: 0 0% 100%;
+    --tile-wall: 0 0% 100%;
+    --tile-start: 0 0% 100%;
+    --tile-end: 0 0% 100%;
   }
 
   .dark {
@@ -80,7 +86,10 @@
   }
 
   .grid-element {
-    width: 100cqmin;
-    height: 100cqmin;
+    max-height: 100cqmin;
+  }
+
+  .tile-element {
+    border-radius: 20%;
   }
 }

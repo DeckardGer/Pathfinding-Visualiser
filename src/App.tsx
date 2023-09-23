@@ -10,10 +10,10 @@ import SideUtils from "./components/sideUtils";
 function App() {
   return (
     <div className="flex">
-      <SideUtils />
+      {/* <SideUtils /> */}
       <div className="flex flex-col grow items-center h-screen">
         <header className="text-3xl my-2">Pathfinding Visualiser</header>
-        <Grid gridSize={10} />
+        <Grid gridCols={10} gridRows={20} />
         <MainUtils />
       </div>
     </div>

@@ -20,12 +20,6 @@ function SideUtils() {
         </Button>
       </div>
       <div className="flex flex-col w-96 h-screen bg-black flex-none items-start px-2">
-        {/* <div className="grid grid-cols-4 items-center gap-4 w-full">
-          <Label htmlFor="name" className="text-right">
-            Name
-          </Label>
-          <p className="col-span-3">Deckard</p>
-        </div> */}
         <header className="flex justify-center w-full">Options</header>
         <div className="grid grid-cols-3 mt-4 items-center gap-4 w-full">
           <Label htmlFor="algorithm" className="text-right col-span-1">
