@@ -53,6 +53,11 @@ module.exports = {
         tile: {
           empty: "hsl(var(--tile-empty))",
         },
+        background1: {
+          "step-1": "hsl(var(--background-gradient-step-1))",
+          "step-2": "hsl(var(--background-gradient-step-2))",
+          "step-3": "hsl(var(--background-gradient-step-3))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

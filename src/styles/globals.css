@@ -39,6 +39,10 @@
     --tile-wall: 0 0% 100%;
     --tile-start: 0 0% 100%;
     --tile-end: 0 0% 100%;
+
+    --background-gradient-step-1: 240 27% 19%;
+    --background-gradient-step-2: 245 39% 28%;
+    --background-gradient-step-3: 246 55% 10%;
   }
 
   .dark {
@@ -78,6 +82,6 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gradient-to-r from-background1-step-3 via-background1-step-2 to-background1-step-3 text-foreground;
   }
 }
