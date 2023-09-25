@@ -80,16 +80,4 @@
   body {
     @apply bg-background text-foreground;
   }
-
-  .grid-container {
-    container-type: size;
-  }
-
-  .grid-element {
-    max-height: 100cqmin;
-  }
-
-  .tile-element {
-    border-radius: 20%;
-  }
 }

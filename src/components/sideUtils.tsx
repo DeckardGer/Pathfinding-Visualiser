@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { settingsConfig } from "../config/settingsConfig";
 
 function SideUtils() {
   return (
@@ -26,10 +27,10 @@ function SideUtils() {
             Algorithm
           </Label>
           <Select>
-            <SelectTrigger className="col-span-2">
+            <SelectTrigger id="algorithm" className="col-span-2">
               <SelectValue placeholder="Select an algorithm" />
             </SelectTrigger>
-            <SelectContent id="algorithm">
+            <SelectContent>
               <SelectGroup>
                 <SelectLabel>Pathfinding Algorithms</SelectLabel>
                 <SelectItem value="A-Star">A* Algorithm</SelectItem>
@@ -42,10 +43,10 @@ function SideUtils() {
             Grid Size
           </Label>
           <Select>
-            <SelectTrigger className="col-span-2">
+            <SelectTrigger id="grid-size" className="col-span-2">
               <SelectValue placeholder="Select a grid size" />
             </SelectTrigger>
-            <SelectContent id="grid-size">
+            <SelectContent>
               <SelectGroup>
                 <SelectLabel>Grid Sizes</SelectLabel>
                 <SelectItem value="grid-10">10x10</SelectItem>
@@ -61,10 +62,10 @@ function SideUtils() {
             Speed
           </Label>
           <Select>
-            <SelectTrigger className="col-span-2">
+            <SelectTrigger id="speed" className="col-span-2">
               <SelectValue placeholder="Select a speed" />
             </SelectTrigger>
-            <SelectContent id="speed">
+            <SelectContent>
               <SelectGroup>
                 <SelectLabel>Pathfinding Speeds</SelectLabel>
                 <SelectItem value="slow">Slow</SelectItem>
