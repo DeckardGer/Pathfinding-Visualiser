@@ -16,9 +16,16 @@ export interface Speed {
 }
 
 export enum ScreenSizes {
-  small = "SMALL",
-  normal = "NORMAL",
-  large = "LARGE",
+  SMALL,
+  NORMAL,
+  LARGE,
+}
+
+export enum TileType {
+  EMPTY,
+  WALL,
+  START,
+  END,
 }
 
 /*

@@ -1,34 +1,45 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Tile from "./tile";
+import { TileType } from "../types/settings";
 
 interface GridProps {
   gridRows: number;
   gridCols: number;
 }
 
+interface TileIndex {
+  row: number;
+  column: number;
+}
+
 function Grid({ gridRows, gridCols }: GridProps) {
   const aspectRatio = gridCols / gridRows;
 
-  const [grid, setGrid] = useState(() => {
-    const initialGrid = Array(gridRows)
-      .fill(null)
-      .map(() => Array(gridCols).fill(false));
-    return initialGrid;
-  });
+  // TODO: Delete
+  console.log("Parent render");
 
-  const handleOnMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    const target = event.target as HTMLDivElement;
-    if (target.getAttribute("id") !== "grid") {
-      const row: number = parseInt(target.dataset.row ?? "-1");
-      const col: number = parseInt(target.dataset.col ?? "-1");
+  const [grid, setGrid] = useState(
+    Array.from({ length: gridRows }, () => Array(gridCols).fill(TileType.EMPTY))
+  );
 
-      if (row < 0 || col < 0) console.log("Invalid row or col");
+  // TODO: Change
+  useEffect(() => {
+    const initialGrid = Array.from({ length: gridRows }, () =>
+      Array(gridCols).fill(TileType.EMPTY)
+    );
+    setGrid(initialGrid);
+  }, [gridRows, gridCols]);
 
-      const updatedGrid = [...grid];
-      updatedGrid[row][col] = true;
-      setGrid(updatedGrid);
-    }
+  const updateTile = ({ row, column }: TileIndex) => {
+    setGrid((oldGrid) => {
+      oldGrid[row][column] = TileType.WALL;
+      return [...oldGrid];
+    });
   };
+
+  const listenChange = useCallback(({ row, column }: TileIndex) => {
+    updateTile({ row, column });
+  }, []);
 
   return (
     <div
@@ -36,7 +47,6 @@ function Grid({ gridRows, gridCols }: GridProps) {
       style={{ containerType: "size" }}
     >
       <div
-        onMouseEnter={handleOnMouseMove}
         className="max-w-full grid gap-0.5"
         style={{
           aspectRatio: `${aspectRatio}`,
@@ -44,18 +54,13 @@ function Grid({ gridRows, gridCols }: GridProps) {
           gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${gridRows}, minmax(0, 1fr))`,
         }}
-        id="grid"
       >
         {grid.map((row, rowIndex) =>
-          row.map((_, colIndex) => (
-            <Tile
-              key={`${rowIndex}-${colIndex}`}
-              row={rowIndex}
-              col={colIndex}
-              state={grid[rowIndex][colIndex]}
-            />
+          row.map((tile, colIndex) => (
+            <Tile key={`${rowIndex}-${colIndex}`} tileType={tile} />
           ))
         )}
+        {/* <button onClick={() => listenChange({ row: 0, column: 0 })}>D</button> */}
       </div>
     </div>
   );

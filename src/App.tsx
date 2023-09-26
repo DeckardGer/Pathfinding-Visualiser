@@ -3,6 +3,8 @@ import Grid from "./components/grid";
 import MainUtils from "./components/mainUtils";
 import SideUtils from "./components/sideUtils";
 import { settingsConfig, CurrentSetting } from "./config/settingsConfig";
+import { useState } from "react";
+import { Columns } from "lucide-react";
 
 // TODO: Add side bar
 // TODO: Customise header
@@ -16,13 +18,23 @@ function App() {
     speed: settingsConfig.speed[0],
   };
 
+  const [rows, setRows] = useState(2);
+  const [columns, setColumns] = useState(2);
+
   return (
     <div className="flex">
       {/* <SideUtils /> */}
       <div className="flex flex-col grow items-center h-screen">
         <Header />
-        <Grid gridRows={40} gridCols={30} />
+        <Grid gridRows={rows} gridCols={columns} />
         <MainUtils />
+        <button
+          className="w-20 h-20 bg-black"
+          onClick={() => {
+            setRows(10);
+            setColumns(10);
+          }}
+        ></button>
       </div>
     </div>
   );

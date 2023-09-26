@@ -1,19 +1,25 @@
+import { memo } from "react";
+import { TileType } from "../types/settings";
+import { cn } from "../lib/utils";
+
 interface TileProps {
-  row: number;
-  col: number;
-  state: boolean;
+  tileType: TileType;
 }
 
-function Tile({ row, col, state }: TileProps) {
-  console.log(state);
+function Tile({ tileType }: TileProps) {
+  // TODO: Delete
+  console.log("Tile render");
+
   return (
     <div
-      className="bg-tile-empty aspect-square"
+      className={cn(
+        "bg-tile-empty aspect-square",
+        tileType === TileType.EMPTY && "bg-tile-empty",
+        tileType === TileType.WALL && "bg-black"
+      )}
       style={{ borderRadius: "20%" }}
-      data-row={row}
-      data-col={col}
     ></div>
   );
 }
 
-export default Tile;
+export default memo(Tile);
