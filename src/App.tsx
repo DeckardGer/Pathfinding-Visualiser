@@ -18,8 +18,8 @@ function App() {
     speed: settingsConfig.speed[0],
   };
 
-  const [rows, setRows] = useState(20);
-  const [columns, setColumns] = useState(20);
+  const [rows, setRows] = useState(10);
+  const [columns, setColumns] = useState(10);
 
   return (
     <div className="flex">
@@ -31,8 +31,10 @@ function App() {
         <button
           className="w-20 h-20 bg-black"
           onClick={() => {
-            setRows(Math.floor(Math.random() * (50 - 10 + 1)) + 10);
-            setColumns(Math.floor(Math.random() * (50 - 10 + 1)) + 10);
+            setRows(Math.floor(Math.random() * (50 - 5 + 1)) + 5);
+            setColumns(Math.floor(Math.random() * (50 - 5 + 1)) + 5);
+            // setRows(4);
+            // setColumns(4);
           }}
         ></button>
       </div>

@@ -9,15 +9,14 @@ interface TileProps {
 }
 
 function Tile({ row, column, tileType }: TileProps) {
-  // TODO: Delete
-  console.log("Tile render");
-
   return (
     <div
       className={cn(
         "bg-tile-empty aspect-square",
         tileType === TileType.EMPTY && "bg-tile-empty",
-        tileType === TileType.WALL && "bg-black"
+        tileType === TileType.WALL && "bg-black",
+        tileType === TileType.START && "bg-green-600",
+        tileType === TileType.END && "bg-red-600"
       )}
       data-row={row}
       data-column={column}

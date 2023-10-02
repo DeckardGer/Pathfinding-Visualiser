@@ -7,25 +7,31 @@ interface GridProps {
   gridCols: number;
 }
 
+// Creates a 2D array given gridRows and gridCols,
+// and sets the start and end tiles
+const initializeGrid = ({ gridRows, gridCols }: GridProps) => {
+  const grid = Array.from({ length: gridRows }, () =>
+    Array(gridCols).fill(TileType.EMPTY)
+  );
+  grid[0][0] = TileType.START;
+  grid[gridRows - 1][gridCols - 1] = TileType.END;
+  return grid;
+};
+
 function Grid({ gridRows, gridCols }: GridProps) {
   const aspectRatio = gridCols / gridRows;
 
-  // TODO: Delete
-  console.log("Parent render");
-
-  const [grid, setGrid] = useState<TileType[][]>(
-    Array.from({ length: gridRows }, () => Array(gridCols).fill(TileType.EMPTY))
-  );
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const [isPrimaryButton, setIsPrimaryButton] = useState<boolean>(true);
+  const [grid, setGrid] = useState<TileType[][]>(
+    initializeGrid({ gridRows, gridCols })
+  );
+
+  console.log("Parent render: ", gridRows, gridCols, grid);
 
   // Updates grid when gridRows or gridCols changes
   useEffect(() => {
-    const newGrid = Array.from({ length: gridRows }, () =>
-      Array(gridCols).fill(TileType.EMPTY)
-    );
-
-    setGrid(newGrid);
+    setGrid(initializeGrid({ gridRows, gridCols }));
   }, [gridRows, gridCols]);
 
   // TODO: Refactor
