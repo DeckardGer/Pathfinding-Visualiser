@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Tile from "./tile";
 import { TileType } from "../types/settings";
 
@@ -18,62 +18,45 @@ const initializeGrid = ({ gridRows, gridCols }: GridProps) => {
   return grid;
 };
 
+// We don't map the values from grid to the tiles as
+// it flickers whenever we change gridRows or gridCols.
+// Instead, we use getTileType() to get the tile type
 function Grid({ gridRows, gridCols }: GridProps) {
   const aspectRatio = gridCols / gridRows;
 
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-  const [isPrimaryButton, setIsPrimaryButton] = useState<boolean>(true);
   const [grid, setGrid] = useState<TileType[][]>(
     initializeGrid({ gridRows, gridCols })
   );
-
-  console.log("Parent render: ", gridRows, gridCols, grid);
 
   // Updates grid when gridRows or gridCols changes
   useEffect(() => {
     setGrid(initializeGrid({ gridRows, gridCols }));
   }, [gridRows, gridCols]);
 
-  // TODO: Refactor
+  // Returns the tile type given the row and column
+  const getTileType = (row: number, column: number) => grid?.[row]?.[column];
+
   // Sets isMouseDown to true, adds the event listener, and updates the tile
+  // only to tiles which aren't draggable
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    document.addEventListener("mouseup", handleMouseUp);
-
-    setIsMouseDown(true);
-    let primaryButton = true;
-    if (event.button === 0) {
-      setIsPrimaryButton(true);
-      primaryButton = true;
-    } else {
-      setIsPrimaryButton(false);
-      primaryButton = false;
-    }
-
     const target = event.target as HTMLDivElement;
 
     if (!target.dataset.row || !target.dataset.column) return;
+    if (target.draggable) return;
 
     const row = parseInt(target.dataset.row);
     const column = parseInt(target.dataset.column);
 
-    if (primaryButton) {
-      updateTile(row, column, TileType.WALL);
-    } else {
-      updateTile(row, column, TileType.EMPTY);
-    }
+    document.addEventListener("mouseup", handleMouseUp);
+    setIsMouseDown(true);
+    updateTile(row, column, TileType.WALL);
   };
 
   // Sets isMouseDown to false and removes the event listener
-  const handleMouseUp = (event: MouseEvent) => {
+  const handleMouseUp = () => {
     document.removeEventListener("mouseup", handleMouseUp);
     setIsMouseDown(false);
-
-    if (event.button === 0) {
-      setIsPrimaryButton(true);
-    } else {
-      setIsPrimaryButton(false);
-    }
   };
 
   // Checks if the row and column data attributes exist and updates the tile
@@ -83,29 +66,65 @@ function Grid({ gridRows, gridCols }: GridProps) {
     const target = event.target as HTMLDivElement;
 
     if (!target.dataset.row || !target.dataset.column) return;
+    if (target.draggable) return;
 
     const row = parseInt(target.dataset.row);
     const column = parseInt(target.dataset.column);
 
-    if (isPrimaryButton) {
-      updateTile(row, column, TileType.WALL);
-    } else {
-      updateTile(row, column, TileType.EMPTY);
-    }
+    updateTile(row, column, TileType.WALL);
+  };
+
+  // Updates the grid when the tile is dropped by updating
+  // the target element with the previous elements tile type
+  // and setting the initial tile type to empty
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLDivElement;
+
+    if (!target.dataset.row || !target.dataset.column) return;
+    if (!target.parentNode) return;
+
+    const initial = target.parentNode.querySelector(
+      "[data-row][data-column]:active"
+    );
+
+    if (!initial) return;
+
+    const initialRowString = initial.getAttribute("data-row");
+    const initialColumnString = initial.getAttribute("data-column");
+
+    if (!initialRowString || !initialColumnString) return;
+
+    const targetRow = parseInt(target.dataset.row);
+    const targetColumn = parseInt(target.dataset.column);
+
+    const initialRow = parseInt(initialRowString);
+    const initialColumn = parseInt(initialColumnString);
+
+    updateTile(targetRow, targetColumn, grid[initialRow][initialColumn]);
+
+    updateTile(initialRow, initialColumn, TileType.EMPTY);
+  };
+
+  // Allows an element to be dragged over the grid with the
+  // correct cursor styles if the element isn't draggable
+  const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLDivElement;
+
+    if (target.draggable) return;
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
   };
 
   // Updates the tile type in the grid only if it has changed
-  const updateTile = useCallback(
-    (row: number, column: number, newTileType: TileType) => {
-      if (grid[row][column] === newTileType) return;
+  const updateTile = (row: number, column: number, newTileType: TileType) => {
+    if (grid[row][column] === newTileType) return;
 
-      setGrid((oldGrid) => {
-        oldGrid[row][column] = newTileType;
-        return [...oldGrid];
-      });
-    },
-    [grid]
-  );
+    setGrid((oldGrid) => {
+      oldGrid[row][column] = newTileType;
+      return [...oldGrid];
+    });
+  };
 
   return (
     <div
@@ -114,9 +133,11 @@ function Grid({ gridRows, gridCols }: GridProps) {
     >
       <div
         className="max-w-full grid gap-0.5"
-        onMouseMove={handleMouseMove}
         onMouseDown={handleMouseDown}
-        onContextMenu={(e) => e.preventDefault()}
+        onMouseMove={handleMouseMove}
+        onDrop={handleDrop}
+        onDragOver={onDragOver}
+        onContextMenu={(event) => event.preventDefault()}
         style={{
           aspectRatio: `${aspectRatio}`,
           width: `${aspectRatio * 100}cqh`,
@@ -124,13 +145,13 @@ function Grid({ gridRows, gridCols }: GridProps) {
           gridTemplateRows: `repeat(${gridRows}, minmax(0, 1fr))`,
         }}
       >
-        {grid.map((row, rowIndex) =>
-          row.map((tile, colIndex) => (
+        {Array.from({ length: gridRows }).map((_, rowIndex) =>
+          Array.from({ length: gridCols }).map((_, colIndex) => (
             <Tile
               key={`${rowIndex}-${colIndex}`}
               row={rowIndex}
               column={colIndex}
-              tileType={tile}
+              tileType={getTileType(rowIndex, colIndex)}
             />
           ))
         )}
