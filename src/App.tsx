@@ -31,10 +31,10 @@ function App() {
         <button
           className="w-20 h-20 bg-black"
           onClick={() => {
-            setRows(Math.floor(Math.random() * (50 - 5 + 1)) + 5);
-            setColumns(Math.floor(Math.random() * (50 - 5 + 1)) + 5);
-            // setRows(4);
-            // setColumns(4);
+            // setRows(Math.floor(Math.random() * (50 - 5 + 1)) + 5);
+            // setColumns(Math.floor(Math.random() * (50 - 5 + 1)) + 5);
+            setRows(50);
+            setColumns(80);
           }}
         ></button>
       </div>

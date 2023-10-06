@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import Tile from "./tile";
 import { TileType } from "../types/settings";
+import randomMaze from "../lib/maze_algorithms/random-maze";
 
 interface GridProps {
   gridRows: number;
   gridCols: number;
 }
 
+const delay = (duration: number) => {
+  return new Promise((resolve) => setTimeout(resolve, duration));
+};
+
 // Creates a 2D array given gridRows and gridCols,
 // and sets the start and end tiles
-const initializeGrid = ({ gridRows, gridCols }: GridProps) => {
+const initializeGrid = (gridRows: number, gridCols: number): TileType[][] => {
   const grid = Array.from({ length: gridRows }, () =>
     Array(gridCols).fill(TileType.EMPTY)
   );
@@ -26,13 +31,13 @@ function Grid({ gridRows, gridCols }: GridProps) {
 
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const [grid, setGrid] = useState<TileType[][]>(
-    initializeGrid({ gridRows, gridCols })
+    initializeGrid(gridRows, gridCols)
   );
 
   // Updates grid when gridRows or gridCols changes
   useEffect(() => {
-    setGrid(initializeGrid({ gridRows, gridCols }));
-  }, [gridRows, gridCols]);
+    setGrid(initializeGrid(gridRows, gridCols));
+  }, [gridRows, gridCols, randomMaze]);
 
   // Returns the tile type given the row and column
   const getTileType = (row: number, column: number) => grid?.[row]?.[column];
@@ -118,6 +123,7 @@ function Grid({ gridRows, gridCols }: GridProps) {
 
   // Updates the tile type in the grid only if it has changed
   const updateTile = (row: number, column: number, newTileType: TileType) => {
+    if (grid?.[row]?.[column] === undefined) return;
     if (grid[row][column] === newTileType) return;
 
     setGrid((oldGrid) => {
@@ -146,16 +152,34 @@ function Grid({ gridRows, gridCols }: GridProps) {
         }}
       >
         {Array.from({ length: gridRows }).map((_, rowIndex) =>
-          Array.from({ length: gridCols }).map((_, colIndex) => (
-            <Tile
-              key={`${rowIndex}-${colIndex}`}
-              row={rowIndex}
-              column={colIndex}
-              tileType={getTileType(rowIndex, colIndex)}
-            />
-          ))
+          Array.from({ length: gridCols }).map((_, colIndex) => {
+            const currentTileType = getTileType(rowIndex, colIndex);
+            const formattedTileType =
+              currentTileType === undefined ? TileType.EMPTY : currentTileType;
+
+            return (
+              <Tile
+                key={`${rowIndex}-${colIndex}`}
+                row={rowIndex}
+                column={colIndex}
+                tileType={formattedTileType}
+              />
+            );
+          })
         )}
       </div>
+      <button
+        onClick={() =>
+          randomMaze(
+            grid,
+            setGrid,
+            initializeGrid(gridRows, gridCols),
+            updateTile
+          )
+        }
+      >
+        Random Maze
+      </button>
     </div>
   );
 }
