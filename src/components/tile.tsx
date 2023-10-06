@@ -2,39 +2,34 @@ import { memo, useEffect, useRef } from "react";
 import { TileType } from "../types/settings";
 import { cn } from "../lib/utils";
 
+const TILE_TRANSITION_DURATION = 0.2;
+
 interface TileProps {
   row: number;
   column: number;
   tileType: TileType;
 }
 
-// TODO: Make colours actual tailwind colours
 function Tile({ row, column, tileType }: TileProps) {
   const element = useRef<HTMLDivElement>(null);
-  const initial = useRef<number>(0);
   const flipped = useRef<boolean>(false);
 
   useEffect(() => {
     if (!element.current) return;
 
-    if (initial.current < 2) {
-      initial.current += 1;
-      return;
-    }
-
     flipped.current
       ? (element.current.style.transform = "")
       : (element.current.style.transform = "rotateX(180deg)");
     flipped.current = !flipped.current;
-  }, [tileType, row, column]);
+  });
 
   return (
     <div
       className={cn(
         "bg-tile-empty aspect-square",
-        tileType === TileType.WALL && "bg-black",
-        tileType === TileType.START && "bg-green-600",
-        tileType === TileType.END && "bg-red-600"
+        tileType === TileType.WALL && "bg-tile-wall",
+        tileType === TileType.START && "bg-tile-start",
+        tileType === TileType.END && "bg-tile-end"
       )}
       ref={element}
       data-row={row}
@@ -47,8 +42,8 @@ function Tile({ row, column, tileType }: TileProps) {
       style={{
         borderRadius: "20%",
         transitionProperty: "transform, background-color",
-        transitionDuration: "0.2s, 0s",
-        transitionDelay: "0s, 0.1s",
+        transitionDuration: `${TILE_TRANSITION_DURATION}s, 0s`,
+        transitionDelay: `0s, ${TILE_TRANSITION_DURATION / 2}s`,
         transitionTimingFunction: "linear, linear",
       }}
     ></div>

@@ -52,6 +52,9 @@ module.exports = {
         },
         tile: {
           empty: "hsl(var(--tile-empty))",
+          wall: "hsl(var(--tile-wall))",
+          start: "hsl(var(--tile-start))",
+          end: "hsl(var(--tile-end))",
         },
         background1: {
           "step-1": "hsl(var(--background-gradient-step-1))",

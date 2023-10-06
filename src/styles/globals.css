@@ -36,9 +36,9 @@
 
     /* TILE COLOURS */
     --tile-empty: 0 0% 100%;
-    --tile-wall: 0 0% 100%;
-    --tile-start: 0 0% 100%;
-    --tile-end: 0 0% 100%;
+    --tile-wall: 0 0% 0%;
+    --tile-start: 118 70% 55%;
+    --tile-end: 0 78% 55%;
 
     --background-gradient-step-1: 240 27% 19%;
     --background-gradient-step-2: 245 39% 28%;
