@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import Tile from "./tile";
 import { TileType } from "../types/settings";
-import randomMaze from "../lib/maze_algorithms/random-maze";
+import randomMaze from "../lib/mazes_&_patterns/random-maze";
+import recursiveDivision from "../lib/mazes_&_patterns/recursive-division";
+import resetGrid from "../lib/grid_manipulation/reset-grid";
 
 interface GridProps {
   gridRows: number;
@@ -14,8 +16,8 @@ const initializeGrid = (gridRows: number, gridCols: number): TileType[][] => {
   const grid = Array.from({ length: gridRows }, () =>
     Array(gridCols).fill(TileType.EMPTY)
   );
-  grid[0][0] = TileType.START;
-  grid[gridRows - 1][gridCols - 1] = TileType.END;
+  grid[1][1] = TileType.START;
+  grid[gridRows - 2][gridCols - 2] = TileType.END;
   return grid;
 };
 
@@ -30,12 +32,10 @@ function Grid({ gridRows, gridCols }: GridProps) {
     initializeGrid(gridRows, gridCols)
   );
 
-  console.log("Parent render");
-
   // Updates grid when gridRows or gridCols changes
   useEffect(() => {
     setGrid(initializeGrid(gridRows, gridCols));
-  }, [gridRows, gridCols, randomMaze]);
+  }, [gridRows, gridCols]);
 
   // Returns the tile type given the row and column
   const getTileType = (row: number, column: number) => grid?.[row]?.[column];
@@ -57,7 +57,7 @@ function Grid({ gridRows, gridCols }: GridProps) {
   };
 
   // Sets isMouseDown to false and removes the event listener
-  const handleMouseUp = (event: any) => {
+  const handleMouseUp = () => {
     document.removeEventListener("mouseup", handleMouseUp);
     isMouseDown.current = false;
   };
@@ -120,23 +120,18 @@ function Grid({ gridRows, gridCols }: GridProps) {
   };
 
   // Updates the tile type in the grid only if it has changed
-  const updateTile = (row: number, column: number, newTileType: TileType) => {
-    // if (grid?.[row]?.[column] === undefined) return;
-    // console.log(
-    //   "Current: " +
-    //     grid[row][column] +
-    //     " New: " +
-    //     newTileType +
-    //     `${grid[row][column] === newTileType ? " Reject" : " Accept"}`
-    // );
-
-    // if (grid[row][column] === newTileType) return;
-
-    // setGrid((oldGrid) => {
-    //   oldGrid[row][column] = newTileType;
-    //   return [...oldGrid];
-    // });
-    console.log("Here");
+  const updateTile = (
+    row: number,
+    column: number,
+    newTileType: TileType,
+    forceUpdate: boolean = true
+  ) => {
+    if (
+      !forceUpdate &&
+      (getTileType(row, column) === TileType.START ||
+        getTileType(row, column) === TileType.END)
+    )
+      return;
     setGrid((oldGrid) => {
       if (oldGrid?.[row]?.[column] === undefined) return oldGrid;
       if (oldGrid[row][column] === newTileType) return oldGrid;
@@ -183,14 +178,11 @@ function Grid({ gridRows, gridCols }: GridProps) {
         )}
       </div>
       <button
-        onClick={() =>
-          randomMaze(
-            grid,
-            setGrid,
-            initializeGrid(gridRows, gridCols),
-            updateTile
-          )
-        }
+        onClick={() => {
+          resetGrid(grid, updateTile);
+          // randomMaze(grid, updateTile);
+          recursiveDivision(grid, updateTile);
+        }}
       >
         Random Maze
       </button>
