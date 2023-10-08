@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import Tile from "./tile";
 import { TileType, RecursiveDivisionBias } from "../types/settings";
-import randomMaze from "../lib/mazes_&_patterns/random-maze";
-import recursiveDivision from "../lib/mazes_&_patterns/recursive-division";
-import resetGrid from "../lib/grid_manipulation/reset-grid";
-import binaryTree from "../lib/mazes_&_patterns/binary-tree";
+import { randomMaze } from "../lib/mazes_&_patterns/random-maze";
+import { recursiveDivision } from "../lib/mazes_&_patterns/recursive-division";
+import { resetGrid } from "../lib/grid_utils/reset-grid";
+import { binaryTree } from "../lib/mazes_&_patterns/binary-tree";
 
 interface GridProps {
   gridRows: number;
@@ -180,14 +180,7 @@ function Grid({ gridRows, gridCols }: GridProps) {
       </div>
       <button
         onClick={() => {
-          // randomMaze(grid, updateTile, resetGrid);
           binaryTree(grid, updateTile, resetGrid);
-          // recursiveDivision(
-          //   grid,
-          //   updateTile,
-          //   resetGrid,
-          //   RecursiveDivisionBias.NONE
-          // );
         }}
       >
         Random Maze

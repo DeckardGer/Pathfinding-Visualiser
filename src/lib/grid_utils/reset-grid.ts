@@ -1,8 +1,8 @@
 import { TileType } from "../../types/settings";
 
-// Makes every tile on thr grid empty except
-// for the start, end, and wall tiles
-const clearPath = (
+// Makes every tile on the grid empty
+// except for the start and end tiles
+export const resetGrid = (
   grid: TileType[][],
   updateTile: (row: number, column: number, newTileType: TileType) => void
 ) => {
@@ -10,13 +10,10 @@ const clearPath = (
     for (let column = 0; column < grid[row].length; column++) {
       if (
         grid[row][column] === TileType.START ||
-        grid[row][column] === TileType.END ||
-        grid[row][column] === TileType.WALL
+        grid[row][column] === TileType.END
       )
         continue;
       updateTile(row, column, TileType.EMPTY);
     }
   }
 };
-
-export default clearPath;

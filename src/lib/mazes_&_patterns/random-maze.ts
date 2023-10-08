@@ -5,7 +5,7 @@ const RANDOM_UPPER_BOUND = 3;
 const TILE_DELAY = 50;
 
 // TODO: Block all settings until complete
-const randomMaze = async (
+export const randomMaze = async (
   grid: TileType[][],
   updateTile: (
     row: number,
@@ -27,5 +27,3 @@ const randomMaze = async (
     await delay(TILE_DELAY);
   }
 };
-
-export default randomMaze;

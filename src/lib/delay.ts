@@ -24,6 +24,8 @@ export const getTileDelay = (totalTiles: number): number => {
   }
 };
 
+// Utility function to determine if the delay should
+// run for individual tiles or multiple tiles
 export const getDelayIndividualTiles = (
   rows: number,
   columns: number

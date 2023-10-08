@@ -7,7 +7,8 @@ enum Orientation {
   HORIZONTAL,
 }
 
-const binaryTree = async (
+// TODO: Block all settings until complete
+export const binaryTree = async (
   grid: TileType[][],
   updateTile: (
     row: number,
@@ -67,5 +68,3 @@ const binaryTree = async (
     if (!delayIndividualTiles) await delay(tile_delay);
   }
 };
-
-export default binaryTree;

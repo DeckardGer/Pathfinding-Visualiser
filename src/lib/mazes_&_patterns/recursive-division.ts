@@ -22,7 +22,7 @@ const randomNumberRange = (min: number, max: number) => {
 };
 
 // TODO: Block all settings until complete
-const recursiveDivision = async (
+export const recursiveDivision = async (
   grid: TileType[][],
   updateTile: (
     row: number,
@@ -155,5 +155,3 @@ const recursiveDivision = async (
     checkHorizontal(grid[0].length - 2, grid.length - 2, bias)
   );
 };
-
-export default recursiveDivision;
