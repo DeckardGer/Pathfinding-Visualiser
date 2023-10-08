@@ -28,6 +28,12 @@ export enum TileType {
   END,
 }
 
+export enum RecursiveDivisionBias {
+  NONE,
+  VERTICAL,
+  HORIZONTAL,
+}
+
 /*
  Global & Types
  - Algorithm: Display, Actual

@@ -1,18 +1,27 @@
-import { TileType } from "../../types/settings";
-import { delay } from "../delay";
+import { TileType, RecursiveDivisionBias } from "../../types/settings";
+import { delay, getTileDelay, getDelayIndividualTiles } from "../delay";
 
-const ROW_DELAY = 10;
+const checkHorizontal = (
+  width: number,
+  height: number,
+  bias: RecursiveDivisionBias
+): boolean => {
+  let result = true;
+  if (height < width) result = false;
+  if (height === width) result = Math.random() < 0.5;
 
-const checkHorizontal = (width: number, height: number): boolean => {
-  if (width < height) return true;
-  if (height < width) return false;
-  return Math.random() < 0.5;
+  if (bias === RecursiveDivisionBias.VERTICAL && result)
+    return result && Math.random() > 0.65;
+  if (bias === RecursiveDivisionBias.HORIZONTAL && !result)
+    return !(!result && Math.random() > 0.65);
+  return result;
 };
 
 const randomNumberRange = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+// TODO: Block all settings until complete
 const recursiveDivision = async (
   grid: TileType[][],
   updateTile: (
@@ -20,23 +29,36 @@ const recursiveDivision = async (
     column: number,
     newTileType: TileType,
     foreUpdate?: boolean
-  ) => void
+  ) => void,
+  resetGrid: (
+    grid: TileType[][],
+    updateTile: (row: number, column: number, newTileType: TileType) => void
+  ) => void,
+  bias: RecursiveDivisionBias
 ) => {
+  resetGrid(grid, updateTile);
+
+  const tile_delay = getTileDelay(grid.length * grid[0].length);
+  const delayIndividualTiles = getDelayIndividualTiles(
+    grid.length,
+    grid[0].length
+  );
+
   for (let i = 0; i < grid[0].length - 1; i++) {
     updateTile(0, i, TileType.WALL, false);
-    // await delay(ROW_DELAY);
+    await delay(tile_delay);
   }
   for (let i = 0; i < grid.length - 1; i++) {
     updateTile(i, grid[0].length - 1, TileType.WALL, false);
-    // await delay(ROW_DELAY);
+    await delay(tile_delay);
   }
   for (let i = grid[0].length - 1; i > 0; i--) {
     updateTile(grid.length - 1, i, TileType.WALL, false);
-    // await delay(ROW_DELAY);
+    await delay(tile_delay);
   }
   for (let i = grid.length - 1; i > 0; i--) {
     updateTile(i, 0, TileType.WALL, false);
-    // await delay(ROW_DELAY);
+    await delay(tile_delay);
   }
 
   const divide = async (
@@ -62,26 +84,26 @@ const recursiveDivision = async (
       for (let wallY = startY; wallY <= endY; wallY++) {
         if (wallY === doorY) {
           updateTile(wallY, doorY, TileType.EMPTY, false);
-          await delay(ROW_DELAY);
         } else {
           updateTile(wallY, wallX, TileType.WALL, false);
-          await delay(ROW_DELAY);
         }
+        if (delayIndividualTiles) await delay(tile_delay);
       }
+      if (!delayIndividualTiles) await delay(tile_delay);
 
       await divide(
         startX,
         startY,
         wallX - 1,
         endY,
-        checkHorizontal(wallX - 1 - startX, endY - startY)
+        checkHorizontal(wallX - 1 - startX, endY - startY, bias)
       );
       await divide(
         wallX + 1,
         startY,
         endX,
         endY,
-        checkHorizontal(endX - (wallX + 1), endY - startY)
+        checkHorizontal(endX - (wallX + 1), endY - startY, bias)
       );
     }
 
@@ -101,26 +123,26 @@ const recursiveDivision = async (
       for (let wallX = startX; wallX <= endX; wallX++) {
         if (wallX === doorX) {
           updateTile(wallY, doorX, TileType.EMPTY, false);
-          await delay(ROW_DELAY);
         } else {
           updateTile(wallY, wallX, TileType.WALL, false);
-          await delay(ROW_DELAY);
         }
+        if (delayIndividualTiles) await delay(tile_delay);
       }
+      if (!delayIndividualTiles) await delay(tile_delay);
 
       await divide(
         startX,
         startY,
         endX,
         wallY - 1,
-        checkHorizontal(endX - startX, wallY - 1 - startY)
+        checkHorizontal(endX - startX, wallY - 1 - startY, bias)
       );
       await divide(
         startX,
         wallY + 1,
         endX,
         endY,
-        checkHorizontal(endX - startX, endY - (wallY + 1))
+        checkHorizontal(endX - startX, endY - (wallY + 1), bias)
       );
     }
   };
@@ -130,7 +152,7 @@ const recursiveDivision = async (
     1,
     grid[0].length - 2,
     grid.length - 2,
-    checkHorizontal(grid[0].length - 2, grid.length - 2)
+    checkHorizontal(grid[0].length - 2, grid.length - 2, bias)
   );
 };
 
