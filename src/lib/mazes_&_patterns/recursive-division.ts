@@ -1,5 +1,5 @@
 import { TileType, RecursiveDivisionBias } from "../../types/settings";
-import { delay, getTileDelay, getDelayIndividualTiles } from "../delay";
+import { delay, getTileDelay, getDelayIndividualTiles } from "../helpers";
 
 const checkHorizontal = (
   width: number,

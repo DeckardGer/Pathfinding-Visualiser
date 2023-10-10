@@ -1,5 +1,5 @@
 import { TileType } from "../../types/settings";
-import { delay } from "../delay";
+import { delay } from "../helpers";
 
 const RANDOM_UPPER_BOUND = 3;
 const TILE_DELAY = 50;

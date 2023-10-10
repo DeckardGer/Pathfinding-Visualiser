@@ -1,5 +1,5 @@
 import { TileType } from "../../types/settings";
-import { delay, getDelayIndividualTiles, getTileDelay } from "../delay";
+import { delay, getDelayIndividualTiles, getTileDelay } from "../helpers";
 
 enum Orientation {
   NONE,

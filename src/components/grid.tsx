@@ -3,24 +3,14 @@ import Tile from "./tile";
 import { TileType, RecursiveDivisionBias } from "../types/settings";
 import { randomMaze } from "../lib/mazes_&_patterns/random-maze";
 import { recursiveDivision } from "../lib/mazes_&_patterns/recursive-division";
-import { resetGrid } from "../lib/grid_utils/reset-grid";
+import { initializeGrid, resetGrid } from "../lib/helpers";
 import { binaryTree } from "../lib/mazes_&_patterns/binary-tree";
+import { aStarAlgorithm } from "../lib/search_algorithms/a-star";
 
 interface GridProps {
   gridRows: number;
   gridCols: number;
 }
-
-// Creates a 2D array given gridRows and gridCols,
-// and sets the start and end tiles
-const initializeGrid = (gridRows: number, gridCols: number): TileType[][] => {
-  const grid = Array.from({ length: gridRows }, () =>
-    Array(gridCols).fill(TileType.EMPTY)
-  );
-  grid[1][1] = TileType.START;
-  grid[gridRows - 2][gridCols - 2] = TileType.END;
-  return grid;
-};
 
 // We don't map the values from grid to the tiles as
 // it flickers whenever we change gridRows or gridCols.
@@ -32,6 +22,8 @@ function Grid({ gridRows, gridCols }: GridProps) {
   const [grid, setGrid] = useState<TileType[][]>(
     initializeGrid(gridRows, gridCols)
   );
+
+  console.log("Parent Render");
 
   // Updates grid when gridRows or gridCols changes
   useEffect(() => {
@@ -180,7 +172,8 @@ function Grid({ gridRows, gridCols }: GridProps) {
       </div>
       <button
         onClick={() => {
-          binaryTree(grid, updateTile, resetGrid);
+          // binaryTree(grid, updateTile, resetGrid);
+          aStarAlgorithm(grid, updateTile);
         }}
       >
         Random Maze

@@ -26,6 +26,9 @@ export enum TileType {
   WALL,
   START,
   END,
+  OPEN,
+  CLOSED,
+  PATH,
 }
 
 export enum RecursiveDivisionBias {

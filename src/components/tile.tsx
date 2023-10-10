@@ -29,7 +29,10 @@ function Tile({ row, column, tileType }: TileProps) {
         "bg-tile-empty aspect-square",
         tileType === TileType.WALL && "bg-tile-wall",
         tileType === TileType.START && "bg-tile-start",
-        tileType === TileType.END && "bg-tile-end"
+        tileType === TileType.END && "bg-tile-end",
+        tileType === TileType.OPEN && "bg-green-300",
+        tileType === TileType.CLOSED && "bg-red-300",
+        tileType === TileType.PATH && "bg-blue-500"
       )}
       ref={element}
       data-row={row}
