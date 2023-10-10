@@ -1,5 +1,5 @@
 import { TileType } from "../types/settings";
-import { Node } from "./search_algorithms/node";
+import { Node } from "./node";
 
 /* ******************************** */
 /* DELAY FUNCTIONS                  */
@@ -119,7 +119,6 @@ export const findTileType = (
 };
 
 export const basicPath = async (
-  grid: TileType[][],
   updateTile: (
     row: number,
     column: number,
@@ -154,6 +153,24 @@ export const basicPath = async (
 
   updateTile(5, 8, TileType.START);
   updateTile(2, 5, TileType.END);
+
+  await delay(tile_delay);
+};
+
+export const anotherBasicPath = async (
+  updateTile: (
+    row: number,
+    column: number,
+    newTileType: TileType,
+    foreUpdate?: boolean
+  ) => void
+) => {
+  const tile_delay = 500;
+
+  for (let i = 0; i < 16; i++) {
+    updateTile(3, i, TileType.WALL, false);
+    updateTile(5, i + 1, TileType.WALL, false);
+  }
 
   await delay(tile_delay);
 };

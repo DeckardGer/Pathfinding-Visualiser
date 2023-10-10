@@ -23,8 +23,6 @@ function Grid({ gridRows, gridCols }: GridProps) {
     initializeGrid(gridRows, gridCols)
   );
 
-  console.log("Parent Render");
-
   // Updates grid when gridRows or gridCols changes
   useEffect(() => {
     setGrid(initializeGrid(gridRows, gridCols));

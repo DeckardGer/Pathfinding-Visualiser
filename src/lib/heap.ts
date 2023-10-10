@@ -1,4 +1,4 @@
-import { Node as AStarNode } from "./search_algorithms/node";
+import { Node as AStarNode } from "./node";
 
 export class MinHeap<Node extends AStarNode> {
   public items: Node[];

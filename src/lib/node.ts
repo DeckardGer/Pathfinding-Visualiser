@@ -4,7 +4,7 @@ export class Node {
   public gCost: number;
   public hCost: number;
   public parent: Node | null;
-  public heapIndex?: number;
+  public heapIndex: number | undefined;
 
   constructor(
     row: number,
@@ -18,6 +18,7 @@ export class Node {
     this.gCost = gCost;
     this.parent = parent;
     this.hCost = this.heuristic(endPos);
+    this.heapIndex = undefined;
   }
 
   fCost() {
