@@ -3,7 +3,7 @@ import Tile from "./tile";
 import { TileType, RecursiveDivisionBias } from "../types/settings";
 import { randomMaze } from "../lib/mazes_&_patterns/random-maze";
 import { recursiveDivision } from "../lib/mazes_&_patterns/recursive-division";
-import { initializeGrid, resetGrid } from "../lib/helpers";
+import { delay, initializeGrid, resetGrid } from "../lib/helpers";
 import { binaryTree } from "../lib/mazes_&_patterns/binary-tree";
 import { aStarAlgorithm } from "../lib/search_algorithms/a-star";
 
@@ -171,8 +171,9 @@ function Grid({ gridRows, gridCols }: GridProps) {
         )}
       </div>
       <button
-        onClick={() => {
+        onClick={async () => {
           // binaryTree(grid, updateTile, resetGrid);
+          // await delay(5000);
           aStarAlgorithm(grid, updateTile);
         }}
       >

@@ -39,6 +39,10 @@ export class MinHeap<Node extends AStarNode> {
     return this.items[item.heapIndex] === item;
   }
 
+  get(heapIndex: number) {
+    return this.items[heapIndex];
+  }
+
   sortDown(item: Node) {
     if (item.heapIndex === undefined) return;
     while (true) {

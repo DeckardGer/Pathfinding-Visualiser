@@ -50,13 +50,6 @@ export const initializeGrid = (rows: number, columns: number): TileType[][] => {
   const grid = Array.from({ length: rows }, () =>
     Array(columns).fill(TileType.EMPTY)
   );
-  // const grid = Array.from({ length: rows }, (_, row) =>
-  //   Array.from(
-  //     { length: columns },
-  //     (_, column) =>
-  //       new Node(row, column, 0, null, { row: rows - 2, column: columns - 2 })
-  //   )
-  // );
   grid[1][1] = TileType.START;
   grid[rows - 2][columns - 2] = TileType.END;
   return grid;

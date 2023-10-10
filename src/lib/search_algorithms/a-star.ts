@@ -12,37 +12,6 @@ type GridPos = {
   column: number;
 };
 
-const getNeighbours = (node: Node, grid: TileType[][]) => {
-  const neighbours: GridPos[] = [];
-
-  if (
-    node.column + 1 < grid[0].length &&
-    grid[node.row][node.column + 1] !== TileType.WALL
-  ) {
-    neighbours.push({ row: node.row, column: node.column + 1 });
-  }
-
-  if (
-    node.row + 1 < grid.length &&
-    grid[node.row + 1][node.column] !== TileType.WALL
-  ) {
-    neighbours.push({ row: node.row + 1, column: node.column });
-  }
-
-  if (node.row - 1 >= 0 && grid[node.row - 1][node.column] !== TileType.WALL) {
-    neighbours.push({ row: node.row - 1, column: node.column });
-  }
-
-  if (
-    node.column - 1 >= 0 &&
-    grid[node.row][node.column - 1] !== TileType.WALL
-  ) {
-    neighbours.push({ row: node.row, column: node.column - 1 });
-  }
-
-  return neighbours;
-};
-
 export const aStarAlgorithm = async (
   grid: TileType[][],
   updateTile: (
@@ -52,23 +21,88 @@ export const aStarAlgorithm = async (
     foreUpdate?: boolean
   ) => void
 ) => {
+  const getNeighbours = (node: Node) => {
+    const neighbours: Node[] = [];
+
+    if (
+      node.column + 1 < grid[0].length &&
+      grid[node.row][node.column + 1] !== TileType.WALL
+    ) {
+      if (heapIndexGrid[node.row][node.column + 1] === -1) {
+        const neighbour = new Node(node.row, node.column + 1, 0, node, endPos);
+        neighbours.push(neighbour);
+        heapIndexGrid[node.row][node.column + 1] = neighbour;
+      } else if (openSet.get(heapIndexGrid[node.row][node.column + 1])) {
+        neighbours.push(openSet.get(heapIndexGrid[node.row][node.column + 1]));
+      }
+    }
+
+    if (
+      node.row + 1 < grid.length &&
+      grid[node.row + 1][node.column] !== TileType.WALL
+    ) {
+      if (heapIndexGrid[node.row + 1][node.column] === -1) {
+        const neighbour = new Node(node.row + 1, node.column, 0, node, endPos);
+        neighbours.push(neighbour);
+        heapIndexGrid[node.row + 1][node.column] = neighbour;
+      } else if (openSet.get(heapIndexGrid[node.row + 1][node.column])) {
+        neighbours.push(openSet.get(heapIndexGrid[node.row + 1][node.column]));
+      }
+    }
+
+    if (
+      node.row - 1 >= 0 &&
+      grid[node.row - 1][node.column] !== TileType.WALL
+    ) {
+      if (heapIndexGrid[node.row - 1][node.column] === -1) {
+        const neighbour = new Node(node.row - 1, node.column, 0, node, endPos);
+        neighbours.push(neighbour);
+        heapIndexGrid[node.row - 1][node.column] = neighbour;
+      } else if (openSet.get(heapIndexGrid[node.row - 1][node.column])) {
+        neighbours.push(openSet.get(heapIndexGrid[node.row - 1][node.column]));
+      }
+    }
+
+    if (
+      node.column - 1 >= 0 &&
+      grid[node.row][node.column - 1] !== TileType.WALL
+    ) {
+      if (heapIndexGrid[node.row][node.column - 1] === -1) {
+        const neighbour = new Node(node.row, node.column - 1, 0, node, endPos);
+        neighbours.push(neighbour);
+        heapIndexGrid[node.row][node.column - 1] = neighbour;
+      } else if (openSet.get(heapIndexGrid[node.row][node.column - 1])) {
+        neighbours.push(openSet.get(heapIndexGrid[node.row][node.column - 1]));
+      }
+    }
+
+    return neighbours;
+  };
   // await basicPath(grid, updateTile);
+
+  let heapIndexGrid = Array.from({ length: grid.length }, () =>
+    Array(grid[0].length).fill(-1)
+  );
 
   const startPos = findTileType(grid, TileType.START);
   const endPos = findTileType(grid, TileType.END, false);
 
   const startNode = new Node(startPos.row, startPos.column, 0, null, endPos);
-  // const nextNode = new Node(2, 1, 1, startNode, endPos);
+  heapIndexGrid[startPos.row][startPos.column] = startNode;
 
   const openSet = new MinHeap<Node>();
-  const closedSet = new Set<GridPos>();
+  const closedSet = new Set<Node>();
 
   openSet.add(startNode);
-  console.log(openSet.contains(new Node(1, 1, 0, null, endPos)));
+  // TODO: CHECK OPENSET.CONTAINS()
+  // TODO: CHECK CLOSEDSET.HAS()
+  // TODO: STORE HEAPINDEX
 
-  while (openSet.count() < 0) {
+  while (openSet.count() > 0) {
     const currentNode = openSet.removeFirst();
-    closedSet.add({ row: currentNode.row, column: currentNode.column });
+    closedSet.add(currentNode);
+    // updateTile(currentNode.row, currentNode.column, TileType.CLOSED);
+    // await delay(TILE_DELAY);
 
     if (
       currentNode.row === endPos.row &&
@@ -78,9 +112,26 @@ export const aStarAlgorithm = async (
       return;
     }
 
-    for (const neighbour of getNeighbours(currentNode, grid)) {
+    for (const neighbour of getNeighbours(currentNode)) {
       if (closedSet.has(neighbour)) {
         continue;
+      }
+
+      const newMovementCostToNeighbour =
+        currentNode.gCost + currentNode.heuristic(neighbour);
+      if (
+        newMovementCostToNeighbour < neighbour.gCost ||
+        !openSet.contains(neighbour)
+      ) {
+        neighbour.gCost = newMovementCostToNeighbour;
+        neighbour.hCost = neighbour.heuristic(endPos);
+        neighbour.parent = currentNode;
+
+        if (!openSet.contains(neighbour)) {
+          openSet.add(neighbour);
+          // updateTile(neighbour.row, neighbour.column, TileType.OPEN);
+          // await delay(TILE_DELAY);
+        }
       }
     }
   }
