@@ -1,5 +1,5 @@
 import { TileType } from "../../types/settings";
-import { anotherBasicPath, delay } from "../helpers";
+import { anotherBasicPath, delay, hopefullyLastPath } from "../helpers";
 import { findTileType } from "../helpers";
 import { basicPath } from "../helpers";
 import { MinHeap } from "../heap";
@@ -33,7 +33,6 @@ const getNeighbours = (
   node: Node,
   grid: TileType[][],
   nodeGrid: Node[][],
-  openSet: MinHeap<Node>,
   endPos: { row: number; column: number }
 ) => {
   const neighbours: Node[] = [];
@@ -46,10 +45,8 @@ const getNeighbours = (
       const neighbour = new Node(node.row, node.column + 1, 0, node, endPos);
       neighbours.push(neighbour);
       nodeGrid[node.row][node.column + 1] = neighbour;
-    } else if (nodeGrid[node.row][node.column + 1].heapIndex !== undefined) {
-      neighbours.push(
-        openSet.get(nodeGrid[node.row][node.column + 1].heapIndex!)
-      );
+    } else {
+      neighbours.push(nodeGrid[node.row][node.column + 1]);
     }
   }
 
@@ -61,10 +58,8 @@ const getNeighbours = (
       const neighbour = new Node(node.row + 1, node.column, 0, node, endPos);
       neighbours.push(neighbour);
       nodeGrid[node.row + 1][node.column] = neighbour;
-    } else if (nodeGrid[node.row + 1][node.column].heapIndex !== undefined) {
-      neighbours.push(
-        openSet.get(nodeGrid[node.row + 1][node.column].heapIndex!)
-      );
+    } else {
+      neighbours.push(nodeGrid[node.row + 1][node.column]);
     }
   }
 
@@ -73,10 +68,8 @@ const getNeighbours = (
       const neighbour = new Node(node.row - 1, node.column, 0, node, endPos);
       neighbours.push(neighbour);
       nodeGrid[node.row - 1][node.column] = neighbour;
-    } else if (nodeGrid[node.row - 1][node.column].heapIndex !== undefined) {
-      neighbours.push(
-        openSet.get(nodeGrid[node.row - 1][node.column].heapIndex!)
-      );
+    } else {
+      neighbours.push(nodeGrid[node.row - 1][node.column]);
     }
   }
 
@@ -88,10 +81,8 @@ const getNeighbours = (
       const neighbour = new Node(node.row, node.column - 1, 0, node, endPos);
       neighbours.push(neighbour);
       nodeGrid[node.row][node.column - 1] = neighbour;
-    } else if (nodeGrid[node.row][node.column - 1].heapIndex !== undefined) {
-      neighbours.push(
-        openSet.get(nodeGrid[node.row][node.column - 1].heapIndex!)
-      );
+    } else {
+      neighbours.push(nodeGrid[node.row][node.column - 1]);
     }
   }
 
@@ -108,7 +99,8 @@ export const aStarAlgorithm = async (
   ) => void
 ) => {
   // await basicPath(updateTile);
-  await anotherBasicPath(updateTile);
+  // await anotherBasicPath(updateTile);
+  // await hopefullyLastPath(updateTile);
 
   const nodeGrid: Node[][] = Array.from({ length: grid.length }, () =>
     Array(grid[0].length)
@@ -145,7 +137,6 @@ export const aStarAlgorithm = async (
       currentNode,
       grid,
       nodeGrid,
-      openSet,
       endPos
     )) {
       if (closedSet.has(neighbour)) {
@@ -166,6 +157,8 @@ export const aStarAlgorithm = async (
         if (!openSet.contains(neighbour)) {
           openSet.add(neighbour);
           updateTile(neighbour.row, neighbour.column, TileType.OPEN, false);
+        } else {
+          openSet.updateItem(neighbour);
         }
       }
     }

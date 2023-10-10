@@ -174,3 +174,42 @@ export const anotherBasicPath = async (
 
   await delay(tile_delay);
 };
+
+export const hopefullyLastPath = async (
+  updateTile: (
+    row: number,
+    column: number,
+    newTileType: TileType,
+    foreUpdate?: boolean
+  ) => void
+) => {
+  const tile_delay = 500;
+
+  updateTile(1, 1, TileType.EMPTY);
+  updateTile(3, 3, TileType.START);
+
+  updateTile(4, 0, TileType.WALL);
+  updateTile(5, 1, TileType.WALL);
+  updateTile(6, 2, TileType.WALL);
+  updateTile(7, 3, TileType.WALL);
+
+  updateTile(10, 2, TileType.WALL);
+  updateTile(10, 3, TileType.WALL);
+  updateTile(10, 4, TileType.WALL);
+  updateTile(10, 5, TileType.WALL);
+  updateTile(10, 6, TileType.WALL);
+  updateTile(9, 6, TileType.WALL);
+  updateTile(9, 7, TileType.WALL);
+  updateTile(8, 7, TileType.WALL);
+  updateTile(8, 8, TileType.WALL);
+  updateTile(7, 8, TileType.WALL);
+  updateTile(6, 8, TileType.WALL);
+  updateTile(5, 8, TileType.WALL);
+  updateTile(4, 8, TileType.WALL);
+  updateTile(3, 8, TileType.WALL);
+  updateTile(2, 8, TileType.WALL);
+  updateTile(1, 8, TileType.WALL);
+  updateTile(0, 8, TileType.WALL);
+
+  await delay(tile_delay);
+};
