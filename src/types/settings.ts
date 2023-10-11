@@ -37,6 +37,13 @@ export enum RecursiveDivisionBias {
   HORIZONTAL,
 }
 
+export enum AlgorithmSpeed {
+  SLOW = 100,
+  NORMAL = 50,
+  FAST = 10,
+  INSTANT = 0,
+}
+
 /*
  Global & Types
  - Algorithm: Display, Actual

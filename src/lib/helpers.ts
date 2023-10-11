@@ -1,4 +1,4 @@
-import { TileType } from "../types/settings";
+import { AlgorithmSpeed, TileType } from "../types/settings";
 import { Node } from "./node";
 
 /* ******************************** */

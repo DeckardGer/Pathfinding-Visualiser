@@ -19,6 +19,7 @@ export const randomMaze = async (
   ) => void
 ) => {
   resetGrid(grid, updateTile);
+
   for (let row = 0; row < grid.length; row++) {
     for (let column = 0; column < grid[row].length; column++) {
       if (Math.floor(Math.random() * RANDOM_UPPER_BOUND) + 1 !== 1) continue;
