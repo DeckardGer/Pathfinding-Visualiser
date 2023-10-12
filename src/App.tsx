@@ -18,8 +18,8 @@ function App() {
     speed: settingsConfig.speed[0],
   };
 
-  const [rows, setRows] = useState(17);
-  const [columns, setColumns] = useState(17);
+  const [rows, setRows] = useState(21);
+  const [columns, setColumns] = useState(21);
 
   return (
     <div className="flex">

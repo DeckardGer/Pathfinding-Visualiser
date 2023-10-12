@@ -1,5 +1,10 @@
 import { TileType, RecursiveDivisionBias } from "../../types/settings";
-import { delay, getTileDelay, getDelayIndividualTiles } from "../helpers";
+import {
+  delay,
+  getTileDelay,
+  getDelayIndividualTiles,
+  resetGrid,
+} from "../helpers";
 
 const checkHorizontal = (
   width: number,
@@ -30,13 +35,9 @@ export const recursiveDivision = async (
     newTileType: TileType,
     foreUpdate?: boolean
   ) => void,
-  resetGrid: (
-    grid: TileType[][],
-    updateTile: (row: number, column: number, newTileType: TileType) => void
-  ) => void,
   bias: RecursiveDivisionBias
 ) => {
-  resetGrid(grid, updateTile);
+  await resetGrid(grid, updateTile);
 
   const tile_delay = getTileDelay(grid.length * grid[0].length);
   const delayIndividualTiles = getDelayIndividualTiles(

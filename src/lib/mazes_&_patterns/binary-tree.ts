@@ -1,5 +1,10 @@
 import { TileType } from "../../types/settings";
-import { delay, getDelayIndividualTiles, getTileDelay } from "../helpers";
+import {
+  delay,
+  getDelayIndividualTiles,
+  getTileDelay,
+  resetGrid,
+} from "../helpers";
 
 enum Orientation {
   NONE,
@@ -15,13 +20,9 @@ export const binaryTree = async (
     column: number,
     newTileType: TileType,
     foreUpdate?: boolean
-  ) => void,
-  resetGrid: (
-    grid: TileType[][],
-    updateTile: (row: number, column: number, newTileType: TileType) => void
   ) => void
 ) => {
-  resetGrid(grid, updateTile);
+  await resetGrid(grid, updateTile);
 
   const tile_delay = getTileDelay(grid.length * grid[0].length);
   const delayIndividualTiles = getDelayIndividualTiles(

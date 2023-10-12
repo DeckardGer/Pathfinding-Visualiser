@@ -10,6 +10,8 @@ import { recursiveDivision } from "../lib/mazes_&_patterns/recursive-division";
 import { delay, initializeGrid, resetGrid } from "../lib/helpers";
 import { binaryTree } from "../lib/mazes_&_patterns/binary-tree";
 import { aStarAlgorithm } from "../lib/search_algorithms/a-star";
+import { breadthFirstSearch } from "../lib/search_algorithms/breadth-first-search";
+import { depthFirstSearch } from "../lib/search_algorithms/depth-first-search";
 
 interface GridProps {
   gridRows: number;
@@ -127,10 +129,9 @@ function Grid({ gridRows, gridCols }: GridProps) {
         getTileType(row, column) === TileType.END)
     )
       return;
+    if (grid?.[row]?.[column] === undefined) return;
+    if (grid[row][column] === newTileType) return;
     setGrid((oldGrid) => {
-      if (oldGrid?.[row]?.[column] === undefined) return oldGrid;
-      if (oldGrid[row][column] === newTileType) return oldGrid;
-
       oldGrid[row][column] = newTileType;
       return [...oldGrid];
     });
@@ -174,8 +175,8 @@ function Grid({ gridRows, gridCols }: GridProps) {
       </div>
       <button
         onClick={async () => {
-          // binaryTree(grid, updateTile, resetGrid);
-          // randomMaze(grid, updateTile, resetGrid);
+          // binaryTree(grid, updateTile);
+          // randomMaze(grid, updateTile);
           // recursiveDivision(
           //   grid,
           //   updateTile,
@@ -183,7 +184,9 @@ function Grid({ gridRows, gridCols }: GridProps) {
           //   RecursiveDivisionBias.NONE
           // );
           // await delay(5000);
-          aStarAlgorithm(grid, updateTile, AlgorithmSpeed.FAST);
+          // aStarAlgorithm(grid, updateTile, AlgorithmSpeed.FAST);
+          // breadthFirstSearch(grid, updateTile, AlgorithmSpeed.FAST);
+          depthFirstSearch(grid, updateTile, AlgorithmSpeed.FAST);
         }}
       >
         Random Maze

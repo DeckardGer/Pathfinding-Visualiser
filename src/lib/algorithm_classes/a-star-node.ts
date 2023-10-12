@@ -6,18 +6,12 @@ export class Node {
   public parent: Node | null;
   public heapIndex: number | undefined;
 
-  constructor(
-    row: number,
-    column: number,
-    gCost: number,
-    parent: Node | null,
-    endPos: { row: number; column: number }
-  ) {
+  constructor(row: number, column: number, parent: Node | null) {
     this.row = row;
     this.column = column;
-    this.gCost = gCost;
+    this.gCost = -1;
     this.parent = parent;
-    this.hCost = this.heuristic(endPos);
+    this.hCost = -1;
     this.heapIndex = undefined;
   }
 

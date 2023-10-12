@@ -1,5 +1,6 @@
 import { AlgorithmSpeed, TileType } from "../../types/settings";
 import {
+  basicPath,
   clearPath,
   delay,
   findTileType,
@@ -7,7 +8,7 @@ import {
   initialiseNodeGrid,
 } from "../helpers";
 import { MinHeap } from "../heap";
-import { Node } from "../node_classes/aStarNode";
+import { Node } from "../algorithm_classes/a-star-node";
 
 // Retrace the path from the end node to the start node
 const retracePath = async (
@@ -34,12 +35,7 @@ const retracePath = async (
 
 // Get the neighbours of a node from
 // the nodeGrid or make new nodes
-const getNeighbours = (
-  node: Node,
-  grid: TileType[][],
-  nodeGrid: Node[][],
-  endPos: { row: number; column: number }
-) => {
+const getNeighbours = (node: Node, grid: TileType[][], nodeGrid: Node[][]) => {
   const neighbours: Node[] = [];
 
   if (
@@ -48,7 +44,7 @@ const getNeighbours = (
   ) {
     let neighbour = nodeGrid[node.row][node.column + 1];
     if (!neighbour) {
-      neighbour = new Node(node.row, node.column + 1, 0, node, endPos);
+      neighbour = new Node(node.row, node.column + 1, node);
       nodeGrid[node.row][node.column + 1] = neighbour;
     }
     neighbours.push(neighbour);
@@ -60,7 +56,7 @@ const getNeighbours = (
   ) {
     let neighbour = nodeGrid[node.row + 1][node.column];
     if (!neighbour) {
-      neighbour = new Node(node.row + 1, node.column, 0, node, endPos);
+      neighbour = new Node(node.row + 1, node.column, node);
       nodeGrid[node.row + 1][node.column] = neighbour;
     }
     neighbours.push(neighbour);
@@ -69,7 +65,7 @@ const getNeighbours = (
   if (node.row - 1 >= 0 && grid[node.row - 1][node.column] !== TileType.WALL) {
     let neighbour = nodeGrid[node.row - 1][node.column];
     if (!neighbour) {
-      neighbour = new Node(node.row - 1, node.column, 0, node, endPos);
+      neighbour = new Node(node.row - 1, node.column, node);
       nodeGrid[node.row - 1][node.column] = neighbour;
     }
     neighbours.push(neighbour);
@@ -81,7 +77,7 @@ const getNeighbours = (
   ) {
     let neighbour = nodeGrid[node.row][node.column - 1];
     if (!neighbour) {
-      neighbour = new Node(node.row, node.column - 1, 0, node, endPos);
+      neighbour = new Node(node.row, node.column - 1, node);
       nodeGrid[node.row][node.column - 1] = neighbour;
     }
     neighbours.push(neighbour);
@@ -100,7 +96,9 @@ export const aStarAlgorithm = async (
   ) => void,
   speed: AlgorithmSpeed
 ) => {
-  clearPath(grid, updateTile);
+  await clearPath(grid, updateTile);
+
+  // await hopefullyLastPath(updateTile);
 
   // Initialise the nodeGrid. Contains all open
   // and closed nodes from searching the grid
@@ -111,7 +109,7 @@ export const aStarAlgorithm = async (
   const endPos = findTileType(grid, TileType.END, false);
 
   // Initialise the startNode and add it to the nodeGrid
-  const startNode = new Node(startPos.row, startPos.column, 0, null, endPos);
+  const startNode = new Node(startPos.row, startPos.column, null);
   nodeGrid[startPos.row][startPos.column] = startNode;
 
   // Initialise the openSet and closedSet
@@ -136,12 +134,7 @@ export const aStarAlgorithm = async (
     updateTile(currentNode.row, currentNode.column, TileType.CLOSED, false);
     if (speed !== AlgorithmSpeed.INSTANT) await delay(speed);
 
-    for (const neighbour of getNeighbours(
-      currentNode,
-      grid,
-      nodeGrid,
-      endPos
-    )) {
+    for (const neighbour of getNeighbours(currentNode, grid, nodeGrid)) {
       if (closedSet.has(neighbour)) {
         continue;
       }
@@ -154,6 +147,7 @@ export const aStarAlgorithm = async (
         !openSet.contains(neighbour)
       ) {
         neighbour.gCost = newMovementCostToNeighbour;
+        neighbour.hCost = neighbour.heuristic(endPos);
         neighbour.parent = currentNode;
 
         if (!openSet.contains(neighbour)) {

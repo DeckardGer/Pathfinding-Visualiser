@@ -44,6 +44,11 @@ export enum AlgorithmSpeed {
   INSTANT = 0,
 }
 
+export type GridPos = {
+  row: number;
+  column: number;
+};
+
 /*
  Global & Types
  - Algorithm: Display, Actual

@@ -1,5 +1,4 @@
-import { AlgorithmSpeed, TileType } from "../types/settings";
-import { Node } from "./node_classes/aStarNode";
+import { GridPos, TileType } from "../types/settings";
 
 /* ******************************** */
 /* DELAY FUNCTIONS                  */
@@ -57,7 +56,7 @@ export const initializeGrid = (rows: number, columns: number): TileType[][] => {
 
 // Makes every tile on thr grid empty except
 // for the start, end, and wall tiles
-export const clearPath = (
+export const clearPath = async (
   grid: TileType[][],
   updateTile: (row: number, column: number, newTileType: TileType) => void
 ) => {
@@ -76,7 +75,7 @@ export const clearPath = (
 
 // Makes every tile on the grid empty
 // except for the start and end tiles
-export const resetGrid = (
+export const resetGrid = async (
   grid: TileType[][],
   updateTile: (row: number, column: number, newTileType: TileType) => void
 ) => {
@@ -92,12 +91,16 @@ export const resetGrid = (
   }
 };
 
+/* ******************************** */
+/* TILE UTILITIES                   */
+/* ******************************** */
+
 // Returns the tile type given the row and column.
 export const findTileType = (
   grid: TileType[][],
   tileType: TileType,
   forwardsSearch: boolean = true
-): { row: number; column: number } => {
+): GridPos => {
   if (forwardsSearch) {
     for (let row = 0; row < grid.length; row++) {
       for (let column = 0; column < grid[row].length; column++) {
@@ -118,6 +121,16 @@ export const findTileType = (
   return { row: -1, column: -1 };
 };
 
+export const checkTileExists = (gridPos: GridPos, grid: TileType[][]) => {
+  return (
+    gridPos.row >= 0 &&
+    gridPos.row < grid.length &&
+    gridPos.column >= 0 &&
+    gridPos.column < grid[0].length
+  );
+};
+
+// TODO: REMOVE
 export const initialiseNodeGrid = (rows: number, columns: number) => {
   return Array.from({ length: rows }, () => Array(columns));
 };

@@ -3,7 +3,7 @@ import { checkTileExists, clearPath, delay, findTileType } from "../helpers";
 import { Node } from "../algorithm_classes/node";
 import { NodeGrid } from "../algorithm_classes/node-grid";
 
-export const breadthFirstSearch = async (
+export const depthFirstSearch = async (
   grid: TileType[][],
   updateTile: (
     row: number,
@@ -36,15 +36,15 @@ export const breadthFirstSearch = async (
   );
 
   // visited keeps track of the visited nodes using a set
-  // while queue keeps track of the nodes to be visited
+  // while stack keeps track of the nodes to be visited
   const visited = new Set<Node>();
-  const queue: Node[] = [];
+  const stack: Node[] = [];
 
   visited.add(startNode);
-  queue.push(startNode);
+  stack.push(startNode);
 
-  while (queue.length > 0) {
-    const currentNode = queue.shift() as Node;
+  while (stack.length > 0) {
+    const currentNode = stack.pop() as Node;
 
     if (nodeGrid.checkForEndNode(currentNode)) {
       await nodeGrid.retracePath(currentNode, updateTile, speed);
@@ -54,10 +54,10 @@ export const breadthFirstSearch = async (
     updateTile(currentNode.row, currentNode.column, TileType.CLOSED, false);
     if (speed !== AlgorithmSpeed.INSTANT) await delay(speed);
 
-    for (const neighbour of nodeGrid.getNeighbours(currentNode)) {
+    for (const neighbour of nodeGrid.getNeighbours(currentNode).reverse()) {
       if (!visited.has(neighbour)) {
         visited.add(neighbour);
-        queue.push(neighbour);
+        stack.push(neighbour);
         updateTile(neighbour.row, neighbour.column, TileType.OPEN, false);
       }
     }
