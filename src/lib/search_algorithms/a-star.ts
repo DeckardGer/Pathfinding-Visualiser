@@ -1,7 +1,13 @@
 import { AlgorithmSpeed, TileType } from "../../types/settings";
-import { clearPath, delay, findTileType } from "../helpers";
+import {
+  clearPath,
+  delay,
+  findTileType,
+  hopefullyLastPath,
+  initialiseNodeGrid,
+} from "../helpers";
 import { MinHeap } from "../heap";
-import { Node } from "../node";
+import { Node } from "../node_classes/aStarNode";
 
 // Retrace the path from the end node to the start node
 const retracePath = async (
@@ -98,9 +104,7 @@ export const aStarAlgorithm = async (
 
   // Initialise the nodeGrid. Contains all open
   // and closed nodes from searching the grid
-  const nodeGrid: Node[][] = Array.from({ length: grid.length }, () =>
-    Array(grid[0].length)
-  );
+  const nodeGrid: Node[][] = initialiseNodeGrid(grid.length, grid[0].length);
 
   // Find the start tile & end tile positions
   const startPos = findTileType(grid, TileType.START);

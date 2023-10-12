@@ -1,4 +1,4 @@
-import { Node as AStarNode } from "./node";
+import { Node as AStarNode } from "./node_classes/aStarNode";
 
 export class MinHeap<Node extends AStarNode> {
   public items: Node[];

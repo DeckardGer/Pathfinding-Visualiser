@@ -1,5 +1,5 @@
 import { AlgorithmSpeed, TileType } from "../types/settings";
-import { Node } from "./node";
+import { Node } from "./node_classes/aStarNode";
 
 /* ******************************** */
 /* DELAY FUNCTIONS                  */
@@ -116,6 +116,10 @@ export const findTileType = (
     }
   }
   return { row: -1, column: -1 };
+};
+
+export const initialiseNodeGrid = (rows: number, columns: number) => {
+  return Array.from({ length: rows }, () => Array(columns));
 };
 
 export const basicPath = async (
