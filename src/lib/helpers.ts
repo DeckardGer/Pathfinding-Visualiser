@@ -130,11 +130,6 @@ export const checkTileExists = (gridPos: GridPos, grid: TileType[][]) => {
   );
 };
 
-// TODO: REMOVE
-export const initialiseNodeGrid = (rows: number, columns: number) => {
-  return Array.from({ length: rows }, () => Array(columns));
-};
-
 export const basicPath = async (
   updateTile: (
     row: number,
@@ -166,7 +161,7 @@ export const basicPath = async (
   updateTile(3, 8, TileType.WALL);
 
   updateTile(1, 1, TileType.EMPTY);
-  updateTile(15, 15, TileType.EMPTY);
+  updateTile(19, 19, TileType.EMPTY);
 
   updateTile(5, 8, TileType.START);
   updateTile(2, 5, TileType.END);

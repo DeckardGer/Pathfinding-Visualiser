@@ -32,7 +32,8 @@ export const breadthFirstSearch = async (
     grid[0].length,
     startNode,
     endPos,
-    grid
+    grid,
+    Node
   );
 
   // visited keeps track of the visited nodes using a set

@@ -1,7 +1,7 @@
-import { Node as AStarNode } from "./algorithm_classes/a-star-node";
+import { HeuristicNode } from "./algorithm_classes/heuristic-node";
 
-export class MinHeap<Node extends AStarNode> {
-  public items: Node[];
+export class MinHeap {
+  public items: HeuristicNode[];
   public currentItemCount: number;
 
   constructor() {
@@ -9,7 +9,7 @@ export class MinHeap<Node extends AStarNode> {
     this.currentItemCount = 0;
   }
 
-  add(item: Node) {
+  add(item: HeuristicNode) {
     item.heapIndex = this.currentItemCount;
     this.items[this.currentItemCount] = item;
     this.sortUp(item);
@@ -26,7 +26,7 @@ export class MinHeap<Node extends AStarNode> {
     return firstItem;
   }
 
-  updateItem(item: Node) {
+  updateItem(item: HeuristicNode) {
     this.sortUp(item);
   }
 
@@ -34,7 +34,7 @@ export class MinHeap<Node extends AStarNode> {
     return this.currentItemCount;
   }
 
-  contains(item: Node) {
+  contains(item: HeuristicNode) {
     if (item.heapIndex === undefined) return false;
     return this.items[item.heapIndex] === item;
   }
@@ -43,7 +43,7 @@ export class MinHeap<Node extends AStarNode> {
     return this.items[heapIndex];
   }
 
-  sortDown(item: Node) {
+  sortDown(item: HeuristicNode) {
     if (item.heapIndex === undefined) return;
     while (true) {
       const childIndexLeft = item.heapIndex * 2 + 1;
@@ -72,7 +72,7 @@ export class MinHeap<Node extends AStarNode> {
     }
   }
 
-  sortUp(item: Node) {
+  sortUp(item: HeuristicNode) {
     if (item.heapIndex === undefined) return;
     let parentIndex = Math.trunc((item.heapIndex - 1) / 2);
 
@@ -89,7 +89,7 @@ export class MinHeap<Node extends AStarNode> {
     }
   }
 
-  swap(itemA: Node, itemB: Node) {
+  swap(itemA: HeuristicNode, itemB: HeuristicNode) {
     if (itemA.heapIndex === undefined || itemB.heapIndex === undefined) return;
     this.items[itemA.heapIndex] = itemB;
     this.items[itemB.heapIndex] = itemA;

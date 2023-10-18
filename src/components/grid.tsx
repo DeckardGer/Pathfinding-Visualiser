@@ -184,9 +184,9 @@ function Grid({ gridRows, gridCols }: GridProps) {
           //   RecursiveDivisionBias.NONE
           // );
           // await delay(5000);
-          // aStarAlgorithm(grid, updateTile, AlgorithmSpeed.FAST);
+          aStarAlgorithm(grid, updateTile, AlgorithmSpeed.FAST);
           // breadthFirstSearch(grid, updateTile, AlgorithmSpeed.FAST);
-          depthFirstSearch(grid, updateTile, AlgorithmSpeed.FAST);
+          // depthFirstSearch(grid, updateTile, AlgorithmSpeed.FAST);
         }}
       >
         Random Maze
